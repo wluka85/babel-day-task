@@ -11,27 +11,26 @@ class FileReader
   def self.get_longest_word(wordList)
     longestWord = ""
     fullWordsLength = 0
-    for word in wordList
+    wordList.each {|word|
       fullWordsLength += word.length
       if (word.length > longestWord.length)
         longestWord = word
       end
-    end
+    }
     return fullWordsLength, longestWord
   end
 
   def self.get_shortest_word(longestWord, wordList)
     shortestWord = longestWord;
-    for word in wordList
+    wordList.each {|word|
       if (word.length < shortestWord.length)
         shortestWord = word
       end
-    end
+    }
     shortestWord
   end
 
-  def self.print_word_statistic(filename)
-    wordList = read_file(filename)
+  def self.print_word_statistic(filename, wordList)
     fullWordsLength, longestWord = get_longest_word(wordList)
     shortestWord = get_shortest_word(longestWord, wordList)
     puts "===#{filename}==="
@@ -42,8 +41,22 @@ class FileReader
     puts ""
   end
 
-  filenames = %w(pl_full.txt en_full.txt)
-  for filename in filenames
-    print_word_statistic(filename)
+  def self.get_words_array
+    plWords = read_file("pl_full.txt")
+    enWords = read_file("en_full.txt")
+    return enWords, plWords
   end
+
+  def self.run_statistic
+    enWords, plWords = get_words_array()
+
+    print_word_statistic("en_full.txt", enWords)
+    print_word_statistic("pl_full.txt", plWords)
+
+    commonWords = plWords & enWords
+    puts "Common Words -> #{commonWords}"
+    puts "Count -> #{commonWords.length}"
+  end
+
+  run_statistic
 end
